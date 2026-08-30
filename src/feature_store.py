@@ -40,10 +40,21 @@ def _get_hopsworks_project():
         kwargs["host"] = host
     return hopsworks.login(**kwargs)
 
+def _fix_null_dtype_columns(df: pd.DataFrame) -> pd.DataFrame:
+    """Forces all-NaN columns to float64 instead of untyped null, which Hopsworks rejects."""
+    df = df.copy()
+    skip_cols = {"city", "timestamp"}
+    for col in df.columns:
+        if col in skip_cols:
+            continue
+        df[col] = pd.to_numeric(df[col], errors="coerce").astype("float64")
+    return df
+
 
 def _hopsworks_write(df: pd.DataFrame):
     project = _get_hopsworks_project()
     fs = project.get_feature_store()
+    df = _fix_null_dtype_columns(df)
     fg = fs.get_or_create_feature_group(
         name=FEATURE_GROUP_NAME,
         version=FEATURE_GROUP_VERSION,
