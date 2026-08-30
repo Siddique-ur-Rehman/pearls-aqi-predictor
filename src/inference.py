@@ -11,21 +11,49 @@ from feature_store import get_latest_feature_row, DEFAULT_BACKEND
 MODEL_DIR = os.path.join(os.path.dirname(__file__), "..", "models")
 
 
-def load_best_model_for_horizon(horizon: int):
+def load_best_model_for_horizon(horizon: int, backend: str = DEFAULT_BACKEND):
     """
-    Finds the saved model for a given horizon. training_pipeline.py saves
-    exactly one winning model per horizon as `{name}_h{horizon}.joblib`.
+    Finds the trained model for a given horizon.
+    - "local": looks for {name}_h{horizon}.joblib in the local models/ folder.
+    - "hopsworks": downloads the model from the Hopsworks Model Registry.
     """
-    pattern = os.path.join(MODEL_DIR, f"*_h{horizon}.joblib")
-    matches = glob.glob(pattern)
-    if not matches:
+    if backend == "local":
+        pattern = os.path.join(MODEL_DIR, f"*_h{horizon}.joblib")
+        matches = glob.glob(pattern)
+        if not matches:
+            raise FileNotFoundError(
+                f"No trained model found for horizon={horizon}h. Run training_pipeline.py first."
+            )
+        latest_path = max(matches, key=os.path.getmtime)
+        bundle = joblib.load(latest_path)
+        return bundle["model"], bundle["feature_cols"], latest_path
+
+    elif backend == "hopsworks":
+        from feature_store import _get_hopsworks_project
+
+        project = _get_hopsworks_project()
+        mr = project.get_model_registry()
+
+        candidate_names = [f"aqi_ridge_h{horizon}", f"aqi_random_forest_h{horizon}"]
+        last_err = None
+        for model_name in candidate_names:
+            try:
+                hw_model = mr.get_model(model_name)
+                model_dir = hw_model.download()
+                matches = glob.glob(os.path.join(model_dir, f"*_h{horizon}.joblib"))
+                if not matches:
+                    continue
+                bundle = joblib.load(matches[0])
+                return bundle["model"], bundle["feature_cols"], matches[0]
+            except Exception as e:
+                last_err = e
+                continue
         raise FileNotFoundError(
-            f"No trained model found for horizon={horizon}h. Run training_pipeline.py first."
+            f"No model found in Hopsworks registry for horizon={horizon}h. "
+            f"Tried: {candidate_names}. Last error: {last_err}"
         )
-    # if multiple exist (e.g. re-trained under a different winning model name), take the newest
-    latest_path = max(matches, key=os.path.getmtime)
-    bundle = joblib.load(latest_path)
-    return bundle["model"], bundle["feature_cols"], latest_path
+    else:
+        raise ValueError(f"Unknown backend: {backend}")
 
 
 def predict_next_3_days(city: str = CITY_NAME, backend: str = DEFAULT_BACKEND) -> dict:
@@ -39,7 +67,7 @@ def predict_next_3_days(city: str = CITY_NAME, backend: str = DEFAULT_BACKEND) -
 
     forecast = {}
     for horizon in HORIZONS:
-        model, feature_cols, model_path = load_best_model_for_horizon(horizon)
+        model, feature_cols, model_path = load_best_model_for_horizon(horizon, backend=backend)
         X = latest_row[feature_cols].to_frame().T
         # fillna defensively — a single missing pollutant shouldn't crash inference
         X = X.fillna(X.median(numeric_only=True)).fillna(0)
