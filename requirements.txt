@@ -1,4 +1,4 @@
-#hopsworks>=3.7,<4.0
+hopsworks>=3.7,<4.0
 pandas>=2.0
 numpy>=1.24
 scikit-learn>=1.3
