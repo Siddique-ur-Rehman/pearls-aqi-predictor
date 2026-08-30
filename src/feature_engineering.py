@@ -6,7 +6,7 @@ import pandas as pd
 def add_time_features(df: pd.DataFrame, ts_col: str = "timestamp") -> pd.DataFrame:
     """Adds hour/day/month/day-of-week + cyclical encodings of hour."""
     df = df.copy()
-    ts = pd.to_datetime(df[ts_col])
+    ts = pd.to_datetime(df[ts_col],utc=True)
     df["hour"] = ts.dt.hour
     df["day"] = ts.dt.day
     df["month"] = ts.dt.month
