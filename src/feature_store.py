@@ -50,7 +50,8 @@ def _hopsworks_write(df: pd.DataFrame):
         primary_key=["city", "timestamp"],
         event_time="timestamp",
         description="Hourly AQI + weather features for AQI forecasting",
-        online_enabled=True,  # needed for low-latency inference lookups
+        online_enabled=True,
+        time_travel_format="HUDI",
     )
     fg.insert(df, write_options={"wait_for_job": True})
     return fg
