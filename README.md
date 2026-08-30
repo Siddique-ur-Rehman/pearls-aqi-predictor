@@ -1,14 +1,39 @@
-# Pearls AQI Predictor 🌫️
+<div align="center">
 
-### 🔗 [**Live App**](https://pearls-aqi-predictor-l7pati8mpttgstvz3mfsu6.streamlit.app/)
+# 🌫️ Pearls AQI Predictor
 
-Predicts Air Quality Index (AQI) 3 days ahead for Peshawar using a 100% serverless ML pipeline —
-live data ingestion, automated training, and a public dashboard, all running without a dedicated server.
+**3-day Air Quality Index forecasting on a 100% serverless ML pipeline**
 
-**Stack:** [Python](https://www.python.org/) · [Scikit-learn](https://scikit-learn.org/) · [TensorFlow](https://www.tensorflow.org/) ·
-[Hopsworks](https://www.hopsworks.ai/) (Feature Store & Model Registry) · [GitHub Actions](https://github.com/features/actions) ·
-[Streamlit](https://streamlit.io/) · [Flask](https://flask.palletsprojects.com/) ·
-[AQICN](https://aqicn.org/api/) / [OpenWeather](https://openweathermap.org/api) · [SHAP](https://shap.readthedocs.io/)
+[![Live App](https://img.shields.io/badge/🚀_Live_App-Streamlit-FF4B4B?style=for-the-badge)](https://pearls-aqi-predictor-l7pati8mpttgstvz3mfsu6.streamlit.app/)
+[![Python](https://img.shields.io/badge/Python-3.11-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
+[![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](#)
+
+[![Scikit--learn](https://img.shields.io/badge/Scikit--learn-F7931E?style=flat-square&logo=scikitlearn&logoColor=white)](https://scikit-learn.org/)
+[![TensorFlow](https://img.shields.io/badge/TensorFlow-FF6F00?style=flat-square&logo=tensorflow&logoColor=white)](https://www.tensorflow.org/)
+[![Hopsworks](https://img.shields.io/badge/Hopsworks-1EB182?style=flat-square)](https://www.hopsworks.ai/)
+[![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-2088FF?style=flat-square&logo=githubactions&logoColor=white)](https://github.com/features/actions)
+[![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?style=flat-square&logo=streamlit&logoColor=white)](https://streamlit.io/)
+[![Flask](https://img.shields.io/badge/Flask-000000?style=flat-square&logo=flask&logoColor=white)](https://flask.palletsprojects.com/)
+[![SHAP](https://img.shields.io/badge/SHAP-8A2BE2?style=flat-square)](https://shap.readthedocs.io/)
+
+</div>
+
+---
+
+Predicts Air Quality Index (AQI) 3 days ahead for Peshawar using a fully serverless
+ML pipeline — live data ingestion, automated training, and a public dashboard,
+all running without a dedicated server.
+
+<div align="center">
+
+### 🔗 Quick Links
+
+[![Open Live Dashboard](https://img.shields.io/badge/Open_Live_Dashboard-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)](https://pearls-aqi-predictor-l7pati8mpttgstvz3mfsu6.streamlit.app/)
+[![AQICN API](https://img.shields.io/badge/AQICN_API-1E90FF?style=for-the-badge)](https://aqicn.org/api/)
+[![OpenWeather API](https://img.shields.io/badge/OpenWeather_API-EB6E4B?style=for-the-badge)](https://openweathermap.org/api)
+[![Hopsworks](https://img.shields.io/badge/Hopsworks_Console-1EB182?style=for-the-badge)](https://app.hopsworks.ai)
+
+</div>
 
 ---
 
@@ -29,9 +54,14 @@ AQICN API ──hourly──▶ Feature Pipeline ──▶ Hopsworks Feature Sto
 ```
 
 Everything runs on free-tier infrastructure with no server of your own:
-- **[GitHub Actions](https://github.com/features/actions)** — runs the hourly feature pipeline and daily training pipeline
-- **[Hopsworks](https://www.hopsworks.ai/)** — stores engineered features and trained models
-- **[Streamlit Community Cloud](https://streamlit.io/cloud)** — hosts the public dashboard
+
+| Layer | Service |
+|---|---|
+| Automation (hourly + daily jobs) | [GitHub Actions](https://github.com/features/actions) |
+| Feature Store & Model Registry | [Hopsworks](https://www.hopsworks.ai/) |
+| Dashboard hosting | [Streamlit Community Cloud](https://streamlit.io/cloud) |
+| Live weather/pollutant data | [AQICN](https://aqicn.org/api/) |
+| Historical backfill data | [OpenWeather](https://openweathermap.org/api) |
 
 ---
 
@@ -45,7 +75,8 @@ pip install -r requirements.txt
 ```
 
 ### 1.2 Get API keys (all free tier)
-| Service | Where | Used for |
+
+| Service | Get a key | Used for |
 |---|---|---|
 | AQICN | [aqicn.org/data-platform/token](https://aqicn.org/data-platform/token/) | live hourly readings |
 | OpenWeather | [openweathermap.org/api](https://openweathermap.org/api) | historical backfill |
@@ -227,10 +258,10 @@ pearls-aqi-predictor/
 
 ---
 
-## Links
+<div align="center">
 
-- 🔗 **Live dashboard:** https://pearls-aqi-predictor-l7pati8mpttgstvz3mfsu6.streamlit.app/
-- 📊 **Data sources:** [AQICN API](https://aqicn.org/api/) · [OpenWeather API](https://openweathermap.org/api)
-- 🗄️ **Feature Store / Model Registry:** [Hopsworks](https://www.hopsworks.ai/)
-- ☁️ **Automation:** [GitHub Actions](https://github.com/features/actions)
-- 🖥️ **Dashboard hosting:** [Streamlit Community Cloud](https://streamlit.io/cloud)
+**Built by [Siddique ur Rehman](#)** · Data Science Instructor & Practitioner, Peshawar
+
+[![Live App](https://img.shields.io/badge/🚀_Try_the_Live_App-FF4B4B?style=for-the-badge)](https://pearls-aqi-predictor-l7pati8mpttgstvz3mfsu6.streamlit.app/)
+
+</div>
