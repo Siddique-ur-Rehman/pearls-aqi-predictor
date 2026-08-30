@@ -1,0 +1,31 @@
+name: Feature Pipeline
+
+on:
+  schedule:
+    - cron: "0 * * * *"   # every hour, on the hour
+  workflow_dispatch: {}    # allows manual "Run workflow" button in GitHub UI
+
+jobs:
+  run-feature-pipeline:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run feature pipeline
+        working-directory: src
+        run: python feature_pipeline.py
+        env:
+          AQICN_API_KEY: ${{ secrets.AQICN_API_KEY }}
+          HOPSWORKS_API_KEY: ${{ secrets.HOPSWORKS_API_KEY }}
+          HOPSWORKS_PROJECT_NAME: ${{ secrets.HOPSWORKS_PROJECT_NAME }}
+          CITY_NAME: ${{ vars.CITY_NAME || 'Peshawar' }}
+          FEATURE_STORE_BACKEND: hopsworks
