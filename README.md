@@ -260,7 +260,7 @@ pearls-aqi-predictor/
 
 <div align="center">
 
-**Built by [Siddique ur Rehman](#)** · Data Science Instructor & Practitioner, Peshawar
+**Built by [Siddique ur Rehman](#)** · Data Scientist & ML Engineer, Peshawar
 
 [![Live App](https://img.shields.io/badge/🚀_Try_the_Live_App-FF4B4B?style=for-the-badge)](https://pearls-aqi-predictor-l7pati8mpttgstvz3mfsu6.streamlit.app/)
 
