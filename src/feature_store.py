@@ -63,7 +63,7 @@ def _hopsworks_write(df: pd.DataFrame):
         description="Hourly AQI + weather features for AQI forecasting",
         time_travel_format="HUDI",
     )
-    fg.insert(df, write_options={"wait_for_job": True})
+    fg.insert(df, write_options={"wait_for_job": False})
     return fg
 
 
