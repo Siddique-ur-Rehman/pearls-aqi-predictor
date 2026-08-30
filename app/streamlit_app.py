@@ -12,6 +12,16 @@ import streamlit as st
 import pandas as pd
 import plotly.graph_objects as go
 
+# Streamlit Cloud's Secrets panel populates st.secrets, NOT os.environ.
+# Bridge every secret into the environment before config.py is imported.
+for _key in [
+    "AQICN_API_KEY", "OPENWEATHER_API_KEY",
+    "HOPSWORKS_API_KEY", "HOPSWORKS_PROJECT_NAME", "HOPSWORKS_HOST",
+    "CITY_NAME", "CITY_LAT", "CITY_LON", "FEATURE_STORE_BACKEND",
+]:
+    if _key in st.secrets and _key not in os.environ:
+        os.environ[_key] = str(st.secrets[_key])
+
 from config import CITY_NAME
 from feature_store import read_features, DEFAULT_BACKEND
 from inference import predict_next_3_days, aqi_category
