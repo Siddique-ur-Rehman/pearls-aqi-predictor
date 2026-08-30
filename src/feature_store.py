@@ -31,10 +31,14 @@ def _local_read(path: str = FEATURES_DATA_PATH) -> pd.DataFrame:
 
 def _get_hopsworks_project():
     import hopsworks
-    return hopsworks.login(
-        api_key_value=HOPSWORKS_API_KEY,
-        project=HOPSWORKS_PROJECT_NAME or None,
-    )
+    host = os.getenv("HOPSWORKS_HOST")
+    kwargs = {
+        "api_key_value": HOPSWORKS_API_KEY,
+        "project": HOPSWORKS_PROJECT_NAME or None,
+    }
+    if host:
+        kwargs["host"] = host
+    return hopsworks.login(**kwargs)
 
 
 def _hopsworks_write(df: pd.DataFrame):
