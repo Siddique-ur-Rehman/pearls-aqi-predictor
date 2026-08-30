@@ -1,34 +1,25 @@
 name: Training Pipeline
-
 on:
   schedule:
-    - cron: "0 2 * * *"   # daily at 02:00 UTC
+    - cron: "0 2 * * *"
   workflow_dispatch: {}
-
 jobs:
   train:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
-
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-
       - name: Install dependencies
         run: pip install -r requirements.txt
-
       - name: Run training pipeline
         working-directory: src
         run: python training_pipeline.py
         env:
           HOPSWORKS_API_KEY: ${{ secrets.HOPSWORKS_API_KEY }}
           HOPSWORKS_PROJECT_NAME: ${{ secrets.HOPSWORKS_PROJECT_NAME }}
+          HOPSWORKS_HOST: ${{ secrets.HOPSWORKS_HOST }}
           FEATURE_STORE_BACKEND: hopsworks
-
-      # Model artifacts are written to Hopsworks' Model Registry inside
-      # training_pipeline.py when FEATURE_STORE_BACKEND=hopsworks — nothing
-      # further to upload here. If you extend save_model() to also push to
-      # the registry, add that call in training_pipeline.py's run() function.
