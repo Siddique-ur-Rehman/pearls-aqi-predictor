@@ -45,6 +45,7 @@ pip install -r requirements.txt
 | AQICN | https://aqicn.org/data-platform/token/ | live hourly readings |
 | OpenWeather | https://openweathermap.org/api | historical backfill |
 | Hopsworks | https://app.hopsworks.ai | feature store + model registry |
+|Live link | https://pearls-aqi-predictor-l7pati8mpttgstvz3mfsu6.streamlit.app/ |
 
 ### 1.3 Configure environment
 ```bash
