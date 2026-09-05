@@ -5,13 +5,22 @@ from datetime import datetime, timezone
 
 from config import AQICN_API_KEY, OPENWEATHER_API_KEY, CITY_NAME, CITY_LAT, CITY_LON
 
-
-def fetch_aqicn_current(city: str = CITY_NAME, token: str = AQICN_API_KEY) -> dict:
+def fetch_aqicn_current(
+    city: str = CITY_NAME,
+    token: str = AQICN_API_KEY,
+    lat: float = CITY_LAT,
+    lon: float = CITY_LON,
+    use_geo: bool = True,
+) -> dict:
     """
-    Fetch the latest AQI reading + individual pollutant/weather sub-indices for a city.
-    Returns the raw 'data' dict from AQICN's /feed endpoint.
+    Fetch the latest AQI reading. Defaults to AQICN's geo-based endpoint,
+    which finds the nearest ACTIVE station to the given coordinates — the
+    plain city-name endpoint can silently resolve to a dead/stale station.
     """
-    url = f"https://api.waqi.info/feed/{city}/?token={token}"
+    if use_geo:
+        url = f"https://api.waqi.info/feed/geo:{lat};{lon}/?token={token}"
+    else:
+        url = f"https://api.waqi.info/feed/{city}/?token={token}"
     resp = requests.get(url, timeout=10)
     resp.raise_for_status()
     payload = resp.json()
