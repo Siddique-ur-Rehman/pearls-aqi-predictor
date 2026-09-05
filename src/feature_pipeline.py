@@ -34,13 +34,24 @@ def run(city: str = CITY_NAME, backend: str = DEFAULT_BACKEND):
     # so just take the last row (the one we just fetched).
     new_featured_row = featured.tail(1)
 
-    print(f"[feature_pipeline] Writing latest feature row to '{backend}' feature store...")
+       print(f"[feature_pipeline] Writing latest feature row to '{backend}' feature store...")
     write_features(new_featured_row, backend=backend)
 
     print(f"[feature_pipeline] Done. Latest AQI={new_featured_row['aqi'].values[0]} "
           f"at {new_featured_row['timestamp'].values[0]}")
-    return new_featured_row
 
+    try:
+        verify_df = read_features(backend=backend)
+        verify_df = verify_df[verify_df["city"] == city] if not verify_df.empty else verify_df
+        if verify_df.empty:
+            print("[feature_pipeline] ⚠️  VERIFY FAILED: read-back returned 0 rows after write.")
+        else:
+            print(f"[feature_pipeline] ✅ VERIFY: {len(verify_df)} total rows now in store, "
+                  f"latest timestamp = {verify_df['timestamp'].max()}")
+    except Exception as e:
+        print(f"[feature_pipeline] ⚠️  VERIFY FAILED: could not read back after write ({e})")
+
+    return new_featured_row
 
 if __name__ == "__main__":
     if not AQICN_API_KEY:
