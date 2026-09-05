@@ -54,7 +54,7 @@ def parse_aqicn_response(data: dict) -> dict:
 
     record = {
         "timestamp": timestamp,
-        "city": data.get("city", {}).get("name", CITY_NAME),
+                "city": CITY_NAME,
         "aqi": data.get("aqi"),
         "pm25": get_val("pm25"),
         "pm10": get_val("pm10"),
