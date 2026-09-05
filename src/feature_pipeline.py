@@ -1,4 +1,13 @@
+"""
+Feature Pipeline — run hourly.
 
+Fetches the latest AQI/weather reading, engineers features, and writes
+to the feature store (local CSV during dev, Hopsworks in production).
+
+Usage:
+    python feature_pipeline.py                    # uses local backend by default
+    FEATURE_STORE_BACKEND=hopsworks python feature_pipeline.py
+"""
 import sys
 import pandas as pd
 
@@ -34,12 +43,15 @@ def run(city: str = CITY_NAME, backend: str = DEFAULT_BACKEND):
     # so just take the last row (the one we just fetched).
     new_featured_row = featured.tail(1)
 
-       print(f"[feature_pipeline] Writing latest feature row to '{backend}' feature store...")
+    print(f"[feature_pipeline] Writing latest feature row to '{backend}' feature store...")
     write_features(new_featured_row, backend=backend)
 
     print(f"[feature_pipeline] Done. Latest AQI={new_featured_row['aqi'].values[0]} "
           f"at {new_featured_row['timestamp'].values[0]}")
 
+    # Verify the write actually persisted and is readable back — this catches
+    # silent read/write failures that would otherwise only show up as a
+    # dashboard that looks "frozen" days later, with no error anywhere.
     try:
         verify_df = read_features(backend=backend)
         verify_df = verify_df[verify_df["city"] == city] if not verify_df.empty else verify_df
@@ -52,6 +64,7 @@ def run(city: str = CITY_NAME, backend: str = DEFAULT_BACKEND):
         print(f"[feature_pipeline] ⚠️  VERIFY FAILED: could not read back after write ({e})")
 
     return new_featured_row
+
 
 if __name__ == "__main__":
     if not AQICN_API_KEY:
